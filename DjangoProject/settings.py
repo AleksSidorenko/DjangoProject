@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'library',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,23 @@ else:
     }
 
 
+"""
+# работа с БД Postgresql
+DATABASES = {
+'default': {
+'ENGINE': 'django.db.backends.postgresql',
+'NAME': 'mydatabase', # Имя вашей существующей базы данных
+'USER': 'postgres', # Пользователь PostgreSQL
+'PASSWORD': '', # Пустой пароль, так как используется trust
+'HOST': 'localhost', # Хост, где работает PostgreSQL
+'PORT': '5432', # Стандартный порт PostgreSQL
+}
+}
+"""
+
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -123,7 +141,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
