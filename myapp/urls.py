@@ -13,3 +13,4 @@ urlpatterns = [
     path('subtasks/<int:pk>/', views.SubTaskDetailUpdateDeleteView.as_view(), name='subtask_detail_update_delete'),
     path('categories/', views.CategoryCreateView.as_view(), name='category_create'),
 ]
+
