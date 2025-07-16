@@ -1,0 +1,193 @@
+09:16:08 От Stanislav M. до Все:
+	😂
+	
+09:17:16 От Oleksii Starodubov до Все:
+	Если Вам скинут, надеюсь до ноября у Вас ничего не запланировано, а то раньше не проверите )))
+	
+09:21:17 От Klymentii Taran до Все:
+	{EF901665-FF4C-43EE-BCE9-94DA857838DA}.png
+	
+09:22:33 От Alexander Golubenko до Все:
+	Replying to "{EF901665-FF4C-43EE-BCE9-94DA857838DA}.png":
+	@Klymentii Taran Предупреди Нику, чтобы поменяла расписание, чтобы записи соответствовали теме. Об этом и говорит преподаватель.
+	
+09:23:43 От Klymentii Taran до Все:
+	Replying to "{EF901665-FF4C-43EE-BCE9-94DA857838DA}.png":
+	уже сообщаю
+	
+09:26:23 От Stanislav M. до Все:
+	да без разницы, хоть в блокноте питон это питон, джанго это джанго
+	
+09:26:52 От Oleksii Starodubov до Все:
+	Replying to "да без разницы, хоть в блокноте питон это питон, д...":
+	в виме! Только хардкор!
+	
+09:26:55 От Dmitro Averkiev до Все:
+	почему нельзя было перед уроком об этом подумать?
+	
+09:28:37 От Olha Dvornyk до Все:
+	Replying to "Сообщение отправлено до того, как вы присоединилис...":
+	@Stanislav M., там не столько математика, сколько логика.
+	
+09:30:22 От Stanislav M. до Все:
+	Replying to "Сообщение отправлено до того, как вы присоединилис...":
+	@Olha Dvornyk через слово всякие математические выражения) очень тяжело воспринимается
+	
+09:31:44 От Hanna Kulykovska до Все:
+	+
+	
+09:31:47 От Darina Trotska до Все:
+	+
+	
+09:31:48 От Olha Dvornyk до Все:
+	+
+	
+09:31:54 От Yevgeniy G до Все:
+	+
+	
+09:32:04 От Olena Marshalova до Все:
+	+
+	
+09:48:15 От Maksym Poliakov до Все:
+	непонятно зачем эти декораторы когда через классы все это делать удобней и плюс ко всему создается только один path в urls при таком как я понял.
+	
+09:54:30 От Klymentii Taran до Все:
+	django_prod/library at main · grosspapatrn/django_prod · GitHub
+	
+09:55:02 От Klymentii Taran до Все:
+	Replying to "django_prod/library at main · grosspapatrn/django_...":
+	это то, что у меня самое последнее сохранённое. мб у кого-то есть чего-то больше в проекте
+	
+10:05:19 От Stanislav M. до Все:
+	было в какой то домашке да
+	
+10:07:48 От Hanna Kulykovska до Все:
+	+
+	
+10:07:48 От Alla Vinogradova до Все:
+	+
+	
+10:07:48 От Olha Dvornyk до Все:
+	+
+	
+10:07:48 От Oleksii Starodubov до Все:
+	+
+	
+10:07:52 От Yevgeniy G до Все:
+	+
+	
+10:07:54 От Olena Marshalova до Все:
+	+
+	
+10:07:57 От Vadym Prudnikov до Все:
+	+
+	
+10:24:35 От Olha Dvornyk до Все:
+	@Teacher 23 Teacher 23, мы успеем рассмотреть обе презентации урока 24 до 12:15? Я имею ввиду  Django_23.pdf, Copy of Django_24.pdf.
+	
+10:26:19 От Stanislav M. до Все:
+	Replying to "@Teacher 23 Teacher 23, мы успеем рассмотреть обе ...":
+	Конечно нет!
+	
+10:28:20 От Vadym Prudnikov до Все:
+	Replying to "@Teacher 23 Teacher 23, мы успеем рассмотреть обе ...":
+	это по ходу был риторический вопрос)))))
+	
+10:46:08 От Dmitro Averkiev до Все:
+	{99BDCCDE-BEAF-44CB-8F4C-2A986E8C7D53}.png
+	
+10:46:41 От Dmitro Averkiev до Все:
+	Replying to "{99BDCCDE-BEAF-44CB-8F4C-2A986E8C7D53}.png":
+	это временное поле и не хранится в базе данных. в моделях оно тоже не прописывается
+	
+10:50:45 От Olena Marshalova до Все:
+	+
+	
+10:50:47 От Yevgeniy G до Все:
+	+
+	
+10:50:49 От Olha Dvornyk до Все:
+	+
+	
+10:51:39 От Hanna Kulykovska до Все:
+	+
+	
+10:57:38 От Stanislav M. до Все:
+	Архитектор как горец получается, в конце останется только один 😁
+	
+11:00:12 От Teacher 23 Teacher 23 до Все:
+	from rest_framework.decorators import api_view
+	from rest_framework.response import Response
+	from rest_framework import status
+	from .models import Book
+	from .serializers import BookListSerializer, BookDetailSerializer, BookCreateSerializer
+	
+	@api_view(['GET', 'POST'])
+	def book_list_create(request):
+	    if request.method == 'GET':
+	        books = Book.objects.all()
+	        serializer = BookListSerializer(books, many=True)
+	        return Response(serializer.data, status=status.HTTP_200_OK)
+	    
+	    elif request.method == 'POST':
+	        serializer = BookCreateSerializer(data=request.data)
+	        if serializer.is_valid():
+	            serializer.save()
+	            return Response(serializer.data, status=status.HTTP_201_CREATED)
+	        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	
+11:00:38 От Teacher 23 Teacher 23 до Все:
+	@api_view(['GET', 'PUT', 'DELETE'])
+	def book_detail_update_delete(request, pk):
+	    try:
+	        book = Book.objects.get(pk=pk)
+	    except Book.DoesNotExist:
+	        return Response({'error': 'Book not found'}, status=status.HTTP_404_NOT_FOUND)
+	    
+	    if request.method == 'GET':
+	        serializer = BookDetailSerializer(book)
+	        return Response(serializer.data, status=status.HTTP_200_OK)
+	    
+	    elif request.method == 'PUT':
+	        serializer = BookCreateSerializer(book, data=request.data)
+	        if serializer.is_valid():
+	            serializer.save()
+	            return Response(serializer.data, status=status.HTTP_200_OK)
+	        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	    
+	    elif request.method == 'DELETE':
+	        book.delete()
+	        return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+	
+11:07:41 От Teacher 23 Teacher 23 до Все:
+	from rest_framework import serializers
+	from .models import Book
+	
+	class BookCreateSerializer(serializers.ModelSerializer):
+	    # created_at = serializers.DateTimeField(read_only=True)
+	
+	    class Meta:
+	        model = Book
+	        fields = '__all__'
+	        read_only_fields = ['created_at', 'id']
+	
+11:08:56 От Klymentii Taran до Все:
+	created_at = models.DateTimeField(null=True, blank=True, verbose_name="Created at")
+	
+11:12:35 От Stanislav M. до Все:
+	Выберите пожалуйста recommended окружение, оранжевые подсветки очень сбивают с толку %)
+	
+11:47:41 От Teacher 23 Teacher 23 до Все:
+	{
+	  "title": "The Quantum Thief",
+	  "author": 1,
+	  "publication_date": "2010-09-30",
+	  "description": "A science fiction novel by Finnish writer Hannu Rajaniemi, featuring the gentleman thief Jean le Flambeur.",
+	  "Genre": "Science Fiction",
+	  "amount_pages": 336,
+	  "publisher": 2,
+	  "created_at": "2025-07-14T09:47:00Z",
+	  "category": 5,
+	  "libraries": [101, 105]
+	}
+	

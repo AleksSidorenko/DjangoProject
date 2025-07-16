@@ -1,3 +1,5 @@
+### DjangoProject/DjangoProject/settings.py
+
 """
 Django settings for DjangoProject project.
 
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'myapp',
     'library',
 ]
@@ -157,3 +160,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SESSION_COOKIE_NAME = 'myapp_sessionid'
+CSRF_COOKIE_NAME = 'myapp_csrftoken'
