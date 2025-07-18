@@ -1,12 +1,12 @@
 # DjangoProject/myapp/views.py
 
 from django.http import HttpResponse
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.pagination import PageNumberPagination
 from myapp.models import Task, SubTask, Category
 from myapp.serializers import TaskSerializer, SubTaskCreateSerializer, TaskDetailSerializer, CategoryCreateSerializer
 from django.utils import timezone
@@ -20,7 +20,7 @@ def hello_alex(request):
 
 class TaskListCreateView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
-    serializer_class = TaskSerializer  # Используем TaskSerializer
+    serializer_class = TaskSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['status', 'deadline']
     search_fields = ['title', 'description']
@@ -91,6 +91,26 @@ class SubTaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
 
 
-class CategoryCreateView(generics.CreateAPIView):
+class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
+
+    @action(detail=False, methods=['get'])
+    def count_tasks(self, request):
+        categories = self.get_queryset().annotate(task_count=Count('task'))
+        serializer = self.get_serializer(categories, many=True)
+        data = [
+            {
+                'id': category['id'],
+                'name': category['name'],
+                'task_count': category['task_count']
+            }
+            for category in serializer.data
+        ]
+        return Response(data)
+
+    @action(detail=False, methods=['get'])
+    def deleted(self, request):
+        deleted_categories = Category.all_objects.filter(is_deleted=True)
+        serializer = self.get_serializer(deleted_categories, many=True)
+        return Response(serializer.data)
