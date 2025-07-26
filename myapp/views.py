@@ -13,16 +13,25 @@ from myapp.serializers import (TaskSerializer, SubTaskCreateSerializer,
 from django.utils import timezone
 from django.db.models import Count
 from datetime import datetime
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.views import APIView
+from myapp.permissions import IsOwnerOrReadOnly
 
 
 def hello_alex(request):
     return HttpResponse("<h1>Hello, Alex</h1>")
 
+class MyTasksView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tasks = Task.objects.filter(owner=request.user).order_by('-created_at')
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data)
 
 class TaskListCreateView(generics.ListCreateAPIView):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['status', 'deadline']
     search_fields = ['title', 'description']
@@ -30,21 +39,18 @@ class TaskListCreateView(generics.ListCreateAPIView):
     ordering = ['-created_at']
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        day = self.request.query_params.get('day', None)
-        if day:
-            valid_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-            if day.capitalize() not in valid_days:
-                return Response({"error": "Invalid day. Use: Monday, Tuesday, etc."},
-                                status=status.HTTP_400_BAD_REQUEST)
-            queryset = queryset.filter(deadline__week_day=valid_days.index(day.capitalize()) + 1)
-        return queryset
+        # Показываем только задачи текущего пользователя
+        return Task.objects.filter(owner=self.request.user)
 
+    def perform_create(self, serializer):
+        # Сохраняем владельца задачи
+        serializer.save(owner=self.request.user)
 
 class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskDetailSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
 
 class TaskStatsView(generics.GenericAPIView):
@@ -60,10 +66,9 @@ class TaskStatsView(generics.GenericAPIView):
         }
         return Response(stats)
 
-
 class SubTaskListCreateView(generics.ListCreateAPIView):
-    queryset = SubTask.objects.all().order_by('-created_at')
     serializer_class = SubTaskCreateSerializer
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['status', 'deadline']
     search_fields = ['title', 'description']
@@ -71,7 +76,8 @@ class SubTaskListCreateView(generics.ListCreateAPIView):
     ordering = ['-created_at']
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        # Показываем только подзадачи текущего пользователя
+        queryset = SubTask.objects.filter(owner=self.request.user)
         task_title = self.request.query_params.get('task_title', None)
         status = self.request.query_params.get('status', None)
 
@@ -86,11 +92,14 @@ class SubTaskListCreateView(generics.ListCreateAPIView):
 
         return queryset
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class SubTaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubTask.objects.all()
     serializer_class = SubTaskCreateSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -119,3 +128,4 @@ class CategoryViewSet(viewsets.ModelViewSet):
         deleted_categories = Category.all_objects.filter(is_deleted=True)
         serializer = self.get_serializer(deleted_categories, many=True)
         return Response(serializer.data)
+

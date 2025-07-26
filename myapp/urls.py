@@ -3,6 +3,7 @@
 from django.urls import path, include
 from . import views
 from rest_framework.routers import DefaultRouter
+from myapp.views import MyTasksView
 
 router = DefaultRouter()
 router.register(r'categories', views.CategoryViewSet, basename='category')
@@ -15,4 +16,5 @@ urlpatterns = [
     path('subtasks/', views.SubTaskListCreateView.as_view(), name='subtask_list_create'),
     path('subtasks/<int:pk>/', views.SubTaskRetrieveUpdateDestroyView.as_view(), name='subtask_detail_update_delete'),
     path('', include(router.urls)),  # Подключаем маршруты для CategoryViewSet
+    path('tasks/my/', MyTasksView.as_view(), name='my-tasks'),
 ]

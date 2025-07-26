@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 class CategoryManager(models.Manager):
     def get_queryset(self):
@@ -23,6 +24,8 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+User = get_user_model()
+
 class Task(models.Model):
     STATUS_CHOICES = [
         ('New', 'New'),
@@ -38,6 +41,8 @@ class Task(models.Model):
     deadline = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     categories = models.ManyToManyField(Category, related_name='task', blank=True)
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
 
     def __str__(self):
         return self.title
@@ -57,6 +62,8 @@ class SubTask(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='New')
     deadline = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subtasks')
 
     def __str__(self):
         return self.title
