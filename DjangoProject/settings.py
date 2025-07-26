@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from environ import Env
 import logging
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -160,10 +161,24 @@ SESSION_COOKIE_NAME = 'myapp_sessionid'
 CSRF_COOKIE_NAME = 'myapp_csrftoken'
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'myapp.pagination.MyCursorPagination',
-    'PAGE_SIZE': 6,
+    'PAGE_SIZE': 5,
 }
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 LOGGING = {
     'version': 1,

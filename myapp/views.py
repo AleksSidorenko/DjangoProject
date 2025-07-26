@@ -8,10 +8,12 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from myapp.models import Task, SubTask, Category
-from myapp.serializers import TaskSerializer, SubTaskCreateSerializer, TaskDetailSerializer, CategoryCreateSerializer
+from myapp.serializers import (TaskSerializer, SubTaskCreateSerializer,
+                               TaskDetailSerializer, CategoryCreateSerializer)
 from django.utils import timezone
 from django.db.models import Count
 from datetime import datetime
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 def hello_alex(request):
@@ -90,10 +92,13 @@ class SubTaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SubTaskCreateSerializer
     lookup_field = 'pk'
 
-
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [SearchFilter, OrderingFilter]
+    ordering_fields = ['name', 'id']
+    ordering = ['name']
 
     @action(detail=False, methods=['get'])
     def count_tasks(self, request):
